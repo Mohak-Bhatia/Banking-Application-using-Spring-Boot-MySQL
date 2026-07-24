@@ -8,6 +8,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AccountImplementation implements AccountService {
 
@@ -24,4 +27,27 @@ public class AccountImplementation implements AccountService {
         account.getAccountCreationDate();
         return this.modelMapper.map(this.accountRepository.save(account), AccountDto.class);
     }
+
+    @Override
+    public AccountDto GetAccount(Long id) {
+        return this.modelMapper.map(this.accountRepository.findById(id), AccountDto.class);
+    }
+
+    @Override
+    public String DeleteAccount(Long id) {
+        accountRepository.deleteById(id);
+        return "Account with id" + id + "is deleted";
+    }
+
+    @Override
+    public List<AccountDto> GetAllAccounts() {
+        List<Account> AccountList = accountRepository.findAll();
+        List<AccountDto> AccountDtoList = new ArrayList<>();
+        for(Account a: AccountList){
+            AccountDtoList.add(modelMapper.map(a, AccountDto.class));
+        }
+        return AccountDtoList;
+    }
+
+
 }
