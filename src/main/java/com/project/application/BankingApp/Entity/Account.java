@@ -28,7 +28,7 @@ public class Account {
     private String accountHolderName;
 
     @Column(name="account_balance")
-    @NotEmpty
+    //@NotEmpty
     private double accountBalance;
 
     @Column(name="accountCreatedAt")
