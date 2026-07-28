@@ -2,6 +2,7 @@ package com.project.application.BankingApp.Service;
 
 import com.project.application.BankingApp.Entity.Account;
 import com.project.application.BankingApp.dto.AccountDto;
+import com.project.application.BankingApp.dto.TransferFundDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,5 +22,6 @@ public interface AccountService {
 
     AccountDto WithdrawAmount(double WithdrawAmount, Long id);
 
+    void TransferFundFeature(TransferFundDto transferFundDto);
 
 }

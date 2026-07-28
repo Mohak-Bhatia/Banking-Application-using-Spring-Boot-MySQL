@@ -6,6 +6,7 @@ import com.project.application.BankingApp.Exception.InsufficientBalance;
 import com.project.application.BankingApp.Repository.AccountRepository;
 import com.project.application.BankingApp.Service.AccountService;
 import com.project.application.BankingApp.dto.AccountDto;
+import com.project.application.BankingApp.dto.TransferFundDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,6 +81,24 @@ public class AccountImplementation implements AccountService {
             accountRepository.save(account);
         }
         return this.modelMapper.map(account, AccountDto.class);
+    }
+
+    @Override
+    public void TransferFundFeature(TransferFundDto transferFundDto) {
+
+        //Sender
+        Account sender = accountRepository.findById(transferFundDto.fromAccountId()).orElseThrow(() -> new AccountNotFound(transferFundDto.fromAccountId()));
+
+        //Receiver
+        Account receiver = accountRepository.findById(transferFundDto.fromAccountId()).orElseThrow(() -> new AccountNotFound(transferFundDto.fromAccountId()));
+
+        sender.setAccountBalance(sender.getAccountBalance() - transferFundDto.amount());
+        accountRepository.save(sender);
+
+        receiver.setAccountBalance(receiver.getAccountBalance() + transferFundDto.amount());
+        accountRepository.save(receiver);
+
+
     }
 
 
