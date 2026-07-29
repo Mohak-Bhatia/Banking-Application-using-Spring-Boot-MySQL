@@ -9,34 +9,30 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-@Entity
-@Table(name="Accounts")
 @Getter
 @Setter
-@NoArgsConstructor
 @AllArgsConstructor
-
-public class Account {
+@NoArgsConstructor
+@Entity
+@Table(name="Transactions")
+public class Transaction {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name= "accountHolder_name")
-    @NotEmpty
-    private String accountHolderName;
-
-    @Column(name="account_balance")
     @NotNull
-    private double accountBalance;
+    private Long accountId;
 
-    @Column(name="accountCreatedAt")
+    @NotNull
+    private double amount;
+
+    @NotEmpty
+    private String transactionType;
+
     @CreationTimestamp
-    private LocalDate accountCreationDate;
-
-
-
+    private LocalDateTime timestamp;
 
 }
