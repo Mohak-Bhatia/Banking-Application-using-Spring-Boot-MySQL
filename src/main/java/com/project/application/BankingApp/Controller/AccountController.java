@@ -2,7 +2,9 @@ package com.project.application.BankingApp.Controller;
 
 import com.project.application.BankingApp.Entity.Account;
 import com.project.application.BankingApp.Service.ServiceImplementation.AccountImplementation;
+import com.project.application.BankingApp.Service.ServiceImplementation.TransactionImplementation;
 import com.project.application.BankingApp.dto.AccountDto;
+import com.project.application.BankingApp.dto.TransactionDto;
 import com.project.application.BankingApp.dto.TransferFundDto;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +21,9 @@ public class AccountController {
 
     @Autowired
     AccountImplementation accountImplementation;
+
+    @Autowired
+    TransactionImplementation transactionImplementation;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -67,6 +72,13 @@ public class AccountController {
     public ResponseEntity<String> TransferFunds(@RequestBody TransferFundDto transferFundDto ){
         accountImplementation.TransferFundFeature(transferFundDto);
         return ResponseEntity.ok("Transfer successful");
+    }
+
+    @GetMapping({"/{id}/transactions"})
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public ResponseEntity<List<TransactionDto>> FetchAllTransactions(@PathVariable("id") Long id){
+        List<TransactionDto> transactions= transactionImplementation.GetAllTransactionsByID(id);
+        return new ResponseEntity(transactions,HttpStatus.ACCEPTED);
     }
 
 

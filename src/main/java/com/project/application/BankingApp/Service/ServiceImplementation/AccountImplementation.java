@@ -1,14 +1,15 @@
 package com.project.application.BankingApp.Service.ServiceImplementation;
 
 import com.project.application.BankingApp.Entity.Account;
+import com.project.application.BankingApp.Entity.Transaction;
 import com.project.application.BankingApp.Exception.AccountNotFound;
 import com.project.application.BankingApp.Exception.InsufficientBalance;
 import com.project.application.BankingApp.Repository.AccountRepository;
+import com.project.application.BankingApp.Repository.TransactionRepository;
 import com.project.application.BankingApp.Service.AccountService;
 import com.project.application.BankingApp.dto.AccountDto;
 import com.project.application.BankingApp.dto.TransferFundDto;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.internal.bytebuddy.implementation.bytecode.Throw;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +24,9 @@ public class AccountImplementation implements AccountService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    TransactionRepository transactionRepository;
 
     @Override
     public AccountDto AddAccount(Account account) {
@@ -67,6 +71,13 @@ public class AccountImplementation implements AccountService {
         double BalanceAfterDeposit = DepositAmount + account.getAccountBalance();
         account.setAccountBalance(BalanceAfterDeposit);
         accountRepository.save(account);
+
+        Transaction transaction = new Transaction();
+        transaction.setAmount(DepositAmount);
+        transaction.setAccountId(id);
+        transaction.setTransactionType("DEPOSIT");
+        transactionRepository.save(transaction);
+
         return this.modelMapper.map(account, AccountDto.class);
     }
 
@@ -80,6 +91,13 @@ public class AccountImplementation implements AccountService {
             account.setAccountBalance(AmountLeft);
             accountRepository.save(account);
         }
+
+        Transaction transaction = new Transaction();
+        transaction.setAmount(WithdrawAmount);
+        transaction.setAccountId(id);
+        transaction.setTransactionType("Withdraw");
+        transactionRepository.save(transaction);
+
         return this.modelMapper.map(account, AccountDto.class);
     }
 
@@ -98,6 +116,11 @@ public class AccountImplementation implements AccountService {
         receiver.setAccountBalance(receiver.getAccountBalance() + transferFundDto.amount());
         accountRepository.save(receiver);
 
+        Transaction transaction = new Transaction();
+        transaction.setAmount(transferFundDto.amount());
+        transaction.setAccountId(transferFundDto.fromAccountId());
+        transaction.setTransactionType("Fund Transfer");
+        transactionRepository.save(transaction);
 
     }
 
